@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="app_preset_prof_preset_name">AlphaHandler Launch Configuration</entry>
+<entry key="app_preset_prof_preset_filter_s"/>
+<entry key="app_preset_prof_preset_filter_p">com.jfservice.charset.alpha.*,
+com.jfservice.charset.weike.*,
+com.jfservice.common.bean.alpha.other.*,
+com.jfservice.common.bean.alpha.request.*,
+com.jfservice.common.bean.alpha.response.*,
+com.jfservice.common.bean.alpha.subcri.*,
+com.jfservice.common.bean.weike.*,
+com.jfservice.common.http.*,
+com.jfservice.common.json.*,
+com.jfservice.common.lang.*,
+com.jfservice.sys.client.core.*,
+com.jfservice.sys.client.event.*,
+com.jfservice.sys.client.handler.*,
+com.jfservice.sys.client.manager.*,
+com.jfservice.sys.clock.dao.*,
+com.jfservice.sys.clock.model.*,
+com.jfservice.sys.clock.service.*,
+com.jfservice.sys.core.*,
+com.jfservice.sys.deviceactiveinfo.dao.*,
+com.jfservice.sys.deviceactiveinfo.model.*,
+com.jfservice.sys.deviceactiveinfo.service.*,
+com.jfservice.sys.family.dao.*,
+com.jfservice.sys.family.model.*,
+com.jfservice.sys.family.service.*,
+com.jfservice.sys.handler.*,
+com.jfservice.sys.keep.*,
+com.jfservice.sys.location.dao.*,
+com.jfservice.sys.location.model.*,
+com.jfservice.sys.location.service.*,
+com.jfservice.sys.media.dao.*,
+com.jfservice.sys.media.model.*,
+com.jfservice.sys.media.service.*,
+com.jfservice.sys.setting.dao.*,
+com.jfservice.sys.setting.model.*,
+com.jfservice.sys.setting.service.*,
+jfservice.*</entry>
+<entry key="app_preset_prof_preset_alloc_p">10</entry>
+<entry key="app_preset_"/>
+<entry key="app_preset_prof_preset_samplingRefreshRate_s">1000</entry>
+<entry key="app_preset_prof_preset_stacks_p">false</entry>
+<entry key="app_preset_prof_preset_roots_p">com.jfservice.charset.alpha.**
+com.jfservice.charset.weike.**
+com.jfservice.common.bean.alpha.other.**
+com.jfservice.common.bean.alpha.request.**
+com.jfservice.common.bean.alpha.response.**
+com.jfservice.common.bean.alpha.subcri.**
+com.jfservice.common.bean.weike.**
+com.jfservice.common.http.**
+com.jfservice.common.json.**
+com.jfservice.common.lang.**
+com.jfservice.sys.client.core.**
+com.jfservice.sys.client.event.**
+com.jfservice.sys.client.handler.**
+com.jfservice.sys.client.manager.**
+com.jfservice.sys.clock.dao.**
+com.jfservice.sys.clock.model.**
+com.jfservice.sys.clock.service.**
+com.jfservice.sys.core.**
+com.jfservice.sys.deviceactiveinfo.dao.**
+com.jfservice.sys.deviceactiveinfo.model.**
+com.jfservice.sys.deviceactiveinfo.service.**
+com.jfservice.sys.family.dao.**
+com.jfservice.sys.family.model.**
+com.jfservice.sys.family.service.**
+com.jfservice.sys.handler.**
+com.jfservice.sys.keep.**
+com.jfservice.sys.location.dao.**
+com.jfservice.sys.location.model.**
+com.jfservice.sys.location.service.**
+com.jfservice.sys.media.dao.**
+com.jfservice.sys.media.model.**
+com.jfservice.sys.media.service.**
+com.jfservice.sys.setting.dao.**
+com.jfservice.sys.setting.model.**
+com.jfservice.sys.setting.service.**
+jfservice.**
+</entry>
+<entry key="profiler.settings.instrument.empty.methods">false</entry>
+<entry key="myeclipse.profiling.mode">0</entry>
+<entry key="profiler.settings.istrument.getter.setter.methods">false</entry>
+<entry key="app_preset_prof_preset_samplingRate_s">100</entry>
+<entry key="app_preset_prof_preset_filterMode_s">true</entry>
+<entry key="app_preset_prof_preset_selector"/>
+<entry key="app_preset_prof_preset_refreshRate_s">1000</entry>
+<entry key="app_preset_prof_preset_runnables_p">true</entry>
+<entry key="app_preset_prof_preset_filterMode_p">false</entry>
+<entry key="app_preset_prof_preset_memoryMode_p">true</entry>
+</properties>

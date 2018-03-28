@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfservice.sys.location.model.LocationInfo">
+	<resultMap type="locationInfo" id="locationInfoResult">
+	    <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+		<result property="serieNo" column="serie_no" />
+		<result property="battery" column="battery" />
+		<result property="longitude" column="longitude" />
+		<result property="latitude" column="latitude" />
+		<result property="locationType" column="location_type" />
+		<result property="accuracy" column="accuracy" />
+		<result property="uploadTime" column="upload_time" />
+		<result property="changeLongitude" column="change_longitude" />
+		<result property="changeLatitude" column="change_latitude" />
+		<result property="belongProject" column="belong_project" />
+		<result property="showType" column="s_t" />
+		<result property="endTime" column="e_t" />
+		<result property="fall" column="fall" />
+		<result property="sportType" column="sport_type" />
+	</resultMap>
+	<sql id="whereParamId">
+	   <if test="_parameter != null and _parameter != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereId">
+	   <if test="id != null and id != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="updateColumn">
+	   <if test="uploadTime != null">
+	         upload_time = #{uploadTime},
+	   </if>
+	    <if test="endTime != null">
+	         e_t = #{endTime},
+	   </if>
+	   <if test="longitude != null">
+	         longitude = #{longitude},
+	   </if>
+	   <if test="latitude != null">
+	         latitude = #{latitude},
+	   </if>
+	    <if test="changeLongitude != null">
+	         change_longitude = #{changeLongitude},
+	   </if>
+	   <if test="changeLatitude != null">
+	         change_latitude = #{changeLatitude},
+	   </if>
+	   <if test="fall != null">
+	         fall = #{fall}
+	   </if>
+	</sql>
+	<sql id="whereSqlId">
+	   <where>
+	        <include refid="whereId"></include>
+	        <if test="belongProject != null">
+	           and belong_project = #{belongProject}
+	        </if>
+	        <if test="serieNo != null">
+	           and serie_no = #{serieNo}
+	        </if>
+	    </where>
+	</sql>
+	<select id="countLocationInfo" parameterType="locationInfo" resultMap="locationInfoResult">
+	    SELECT * FROM locationinfo
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findByIdLocationInfo" parameterType="int" resultMap="locationInfoResult">
+	    SELECT * FROM locationinfo
+	    <where>
+	       <if test="_parameter != 0 and _parameter != null">
+	          id = #{id}
+	       </if>
+	    </where>
+	</select>
+	<select id="findLocationInfo" parameterType="locationInfo" resultMap="locationInfoResult">
+	   SELECT * FROM locationinfo
+	   <include refid="whereSqlId"></include>
+	</select>
+	<select id="findAllLocationInfo" parameterType="locationInfo" resultMap="locationInfoResult">
+	    SELECT * FROM locationinfo
+	</select>
+	<insert id="insertLocationInfo" parameterType="locationInfo" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		locationinfo(serie_no,battery,longitude,latitude,location_type,accuracy,upload_time,change_longitude,change_latitude,belong_project,s_t,e_t,fall,sport_type)
+		values(#{serieNo},#{battery},#{longitude},#{latitude},#{locationType},#{accuracy},#{uploadTime},#{changeLongitude},#{changeLatitude},#{belongProject},#{showType},#{endTime},#{fall},#{sportType})
+	</insert>
+	<insert id="batchInsertLocationInfo" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert into locationinfo(serie_no,battery,longitude,latitude,location_type,accuracy,upload_time,change_longitude,change_latitude,belong_project,s_t,e_t,fall,sport_type)   
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">  
+        (#{item.serieNo},#{item.battery},#{item.longitude},#{item.latitude},#{item.locationType},#{item.accuracy},#{item.uploadTime},#{item.changeLongitude},#{item.changeLatitude},#{item.belongProject},#{item.showType},#{item.endTime},#{item.fall},#{item.sportType})  
+    </foreach>  
+</insert>
+	<update id="updateByIdLocationInfo" parameterType="int">
+		UPDATE locationinfo
+		<set>
+		  <include refid="updateColumn"></include>
+		</set>	
+		<where>
+		    <include refid="whereParamId"></include>
+		</where>
+	</update>
+	
+	<update id="updateLocationInfo" parameterType="locationInfo">
+	    UPDATE locationinfo
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	
+	<delete id="deleteByIdLocationInfo" parameterType="int">
+	    DELETE FROM locationinfo
+	    <where>
+		    <include refid="whereId"></include>
+		</where>
+	</delete>
+	
+	<delete id="deleteLocationInfo" parameterType="int">
+	    DELETE FROM locationinfo
+	    <where>
+	       <include refid="whereParamId"></include>
+	    </where>	    
+	</delete>
+	
+	<delete id="batchDeleteLocationInfo" parameterType="java.util.List">
+	    DELETE FROM locationinfo
+	    <where>
+	        id in
+	    </where>
+	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">  
+        #{item}  
+    </foreach> 
+	</delete>
+</mapper>

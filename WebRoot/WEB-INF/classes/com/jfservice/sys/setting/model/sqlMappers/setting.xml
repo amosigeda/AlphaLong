@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfservice.sys.setting.model.Setting">
+	<resultMap type="setting" id="SettingResult">
+	    <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+		<result property="serieNo" column="serie_no" />
+		<result property="volume" column="volume" />
+		<result property="map" column="map" />
+		<result property="fallOn" column="fallOn" />
+		<result property="light" column="light" />
+		<result property="gps_on" column="gps_on" />
+		<result property="light_sensor" column="light_sensor" />
+		<result property="fall" column="fall" />
+		<result property="belongProject" column="belong_project" />
+		<result property="shutdown" column="shutdown" />
+		<result property="repellent" column="repellent" />
+		<result property="heart" column="heart" />
+		<result property="seac" column="seac" />
+		<result property="listen" column="listen" />
+		<result property="rest" column="rest" />
+		<result property="res" column="res" />
+		<result property="veri" column="veri" />
+		<result property="high" column="high" />
+		<result property="weight" column="weight" />
+		<result property="sex" column="sex" />
+		<result property="stepd" column="stepd" />
+		<result property="phone" column="phone" />
+		<result property="nickName" column="nick_name" />
+		<result property="birthday" column="birthday" />
+		
+	</resultMap>
+	<sql id="whereParamId">
+	   <if test="_parameter != null and _parameter != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereId">
+	   <if test="id != null and id != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="updateColumn">
+	   <if test="volume != null">
+	         volume = #{volume},
+	   </if>
+	   <if test="map != null">
+	         map = #{map},
+	   </if>
+	   <if test="fallOn != null">
+	         fallOn = #{fallOn},
+	   </if>
+	   <if test="light != null">
+	         light = #{light},
+	   </if>
+	    <if test="gps_on != null">
+	         gps_on = #{gps_on},
+	   </if>
+	   <if test="light_sensor != null">
+	         light_sensor = #{light_sensor},
+	   </if>
+	    <if test="fall != null">
+	         fall = #{fall},
+	   </if>
+	   <if test="shutdown != null">
+	         shutdown = #{shutdown},
+	   </if>
+	    <if test="repellent != null">
+	         repellent = #{repellent},
+	   </if>
+	   <if test="heart != null">
+	         heart = #{heart},
+	   </if>
+	   <if test="seac != null">
+	         seac = #{seac},
+	   </if>
+	    <if test="listen != null">
+	         listen = #{listen},
+	   </if>
+	   <if test="rest != null">
+	         rest = #{rest},
+	   </if>
+	    <if test="res != null">
+	         res = #{res},
+	   </if>
+	   <if test="veri != null">
+	         veri = #{veri},
+	   </if>
+	    <if test="high != null">
+	         high = #{high},
+	   </if>
+	    <if test="weight != null">
+	         weight = #{weight},
+	   </if>
+	    <if test="sex != null">
+	         sex = #{sex},
+	   </if>
+	    <if test="stepd != null">
+	         stepd = #{stepd},
+	   </if>
+	    <if test="phone != null">
+	         phone = #{phone},
+	   </if>
+	    <if test="nickName != null">
+	         nick_name = #{nickName},
+	   </if>
+	    <if test="birthday != null">
+	         birthday = #{birthday},
+	   </if>
+	</sql>
+	<sql id="whereSqlId">
+	   <where>
+	        <include refid="whereId"></include>
+	        <if test="belongProject != null">
+	           and belong_project = #{belongProject}
+	        </if>
+	        <if test="serieNo != null">
+	           and serie_no = #{serieNo}
+	        </if>
+	    </where>
+	</sql>
+	<select id="countSetting" parameterType="setting" resultMap="SettingResult">
+	    SELECT * FROM settinginfo
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findByIdSetting" parameterType="int" resultMap="SettingResult">
+	    SELECT * FROM settinginfo
+	    <where>
+	       <if test="_parameter != 0 and _parameter != null">
+	          id = #{id}
+	       </if>
+	    </where>
+	</select>
+	<select id="findSetting" parameterType="setting" resultMap="SettingResult">
+	   SELECT * FROM settinginfo
+	   <include refid="whereSqlId"></include>
+	</select>
+	<select id="findAllSetting" parameterType="setting" resultMap="SettingResult">
+	    SELECT * FROM settinginfo
+	</select>
+	<insert id="insertSetting" parameterType="setting" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		settinginfo(serie_no,volume,map,fallOn,light,gps_on,light_sensor,fall,belong_project,seac,listen,rest,res,veri,high,weight,sex,stepd,phone,nick_name,birthday)
+		values(#{serieNo},#{volume},#{map},#{fallOn},#{light},#{gps_on},#{light_sensor},#{fall},#{belongProject},#{seac},#{listen},#{rest},#{res},#{veri},#{high},#{weight},#{sex},#{stepd},#{phone},#{nickName},#{birthday})
+	</insert>
+	<insert id="batchInsertSetting" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert into settinginfo(serie_no,volume,map,fallOn,light,gps_on,light_sensor,fall,belong_project,seac,listen,rest,res,veri,high,weight,sex,stepd,phone,nick_name,birthday)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">  
+       (#{item.serieNo},#{item.volume},#{item.map},#{item.fallOn},#{item.light},#{item.gps_on},#{item.light_sensor},#{item.fall},#{item.belongProject},#{item.seac},#{item.listen},#{item.rest},#{item.res},#{item.veri},#{item.high},#{item.weight},#{item.sex},#{item.stepd},#{item.phone},#{item.nickName},#{item.birthday})
+    </foreach>  
+</insert>
+	<update id="updateByIdSetting" parameterType="int">
+		UPDATE settinginfo
+		<set>
+		  <include refid="updateColumn"></include>
+		</set>	
+		<where>
+		    <include refid="whereParamId"></include>
+		</where>
+	</update>
+	
+	<update id="updateSetting" parameterType="setting">
+	    UPDATE settinginfo
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	
+	<delete id="deleteByIdSetting" parameterType="int">
+	    DELETE FROM settinginfo
+	    <where>
+		    <include refid="whereId"></include>
+		</where>
+	</delete>
+	
+	<delete id="deleteSetting" parameterType="int">
+	    DELETE FROM settinginfo
+	    <where>
+	       <include refid="whereParamId"></include>
+	    </where>	    
+	</delete>
+	
+	<delete id="batchDeleteSetting" parameterType="java.util.List">
+	    DELETE FROM settinginfo
+	    <where>
+	        id in
+	    </where>
+	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">  
+        #{item}  
+    </foreach> 
+	</delete>
+</mapper>

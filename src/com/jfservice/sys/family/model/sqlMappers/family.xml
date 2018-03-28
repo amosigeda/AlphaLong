@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfservice.sys.family.model.Family">
+	<resultMap type="family" id="FamilyResult">
+	    <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+		<result property="serieNo" column="serie_no" />
+		<result property="productModel" column="product_model" />
+		<result property="phoneNumber" column="phone_number" />
+		<result property="relativeType" column="relative_type" />
+		<result property="nickName" column="nick_name" />
+		<result property="status" column="status" />
+		<result property="userId" column="user_id" />
+		<result property="addTime" column="add_time" />
+		<result property="belongProject" column="belong_project" />
+		<result property="shortNumber" column="short_number" />
+	</resultMap>
+	<sql id="whereParamId">
+	   <if test="_parameter != null and _parameter != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereId">
+	   <if test="id != null and id != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="updateColumn">
+	   <if test="phoneNumber != null">
+	         phone_number = #{phoneNumber},
+	   </if>
+	    <if test="relativeType != null">
+	         relative_type = #{relativeType},
+	   </if>
+	   <if test="nickName != null">
+	         nick_name = #{nickName},
+	   </if>
+	   <if test="status != null">
+	         status = #{status},
+	   </if>
+	    <if test="shortNumber != null">
+	         short_number = #{shortNumber},
+	   </if>
+	</sql>
+	<sql id="whereSqlId">
+	   <where>
+	        <include refid="whereId"></include>
+	        <if test="belongProject != null">
+	           and belong_project = #{belongProject}
+	        </if>
+	        <if test="serieNo != null">
+	           and serie_no = #{serieNo}
+	        </if>
+	        <if test="userId != null">
+	           and user_id = #{userId}
+	        </if>
+	        <if test="relativeType != null">
+	           and relative_type = #{relativeType}
+	        </if>
+	    </where>
+	</sql>
+	<select id="countFamily" parameterType="family" resultMap="FamilyResult">
+	    SELECT * FROM relativecallinfo
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findByIdFamily" parameterType="int" resultMap="FamilyResult">
+	    SELECT * FROM relativecallinfo
+	    <where>
+	       <if test="_parameter != 0 and _parameter != null">
+	          id = #{id}
+	       </if>
+	    </where>
+	</select>
+	<select id="findFamily" parameterType="family" resultMap="FamilyResult">
+	   SELECT * FROM relativecallinfo
+	   <include refid="whereSqlId"></include>
+	</select>
+	<select id="findAllFamily" parameterType="family" resultMap="FamilyResult">
+	    SELECT * FROM relativecallinfo
+	</select>
+	<insert id="insertFamily" parameterType="family" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		relativecallinfo(serie_no,relative_type,phone_number,nick_name,status,user_id,add_time,belong_project,short_number)
+		values(#{serieNo},#{relativeType},#{phoneNumber},#{nickName},#{status},#{userId},#{addTime},#{belongProject},#{shortNumber})
+	</insert>
+	<insert id="batchInsertFamily" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert into relativecallinfo(serie_no,relative_type,phone_number,nick_name,status,user_id,add_time,belong_project,short_number)   
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">  
+        (#{item.serieNo},#{item.relativeType},#{item.phoneNumber},#{item.nickName},#{item.status},#{item.userId},#{item.addTime},#{item.belongProject},#{item.shortNumber})
+    </foreach>  
+</insert>
+	<update id="updateByIdFamily" parameterType="int">
+		UPDATE relativecallinfo
+		<set>
+		  <include refid="updateColumn"></include>
+		</set>	
+		<where>
+		    <include refid="whereParamId"></include>
+		</where>
+	</update>
+	
+	<update id="updateFamily" parameterType="family">
+	    UPDATE relativecallinfo
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	
+	<delete id="deleteByIdFamily" parameterType="int">
+	    DELETE FROM relativecallinfo
+	    <where>
+		    <include refid="whereId"></include>
+		</where>
+	</delete>
+	
+	<delete id="deleteFamily" parameterType="family">
+	    DELETE FROM relativecallinfo
+	    <include refid="whereSqlId"></include>	    
+	</delete>
+	
+	<delete id="batchDeleteFamily" parameterType="java.util.List">
+	    DELETE FROM relativecallinfo
+	    <where>
+	        id in
+	    </where>
+	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">  
+        #{item}  
+    </foreach> 
+	</delete>
+</mapper>

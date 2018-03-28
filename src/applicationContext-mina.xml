@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+           http://www.springframework.org/schema/tx
+     	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- <context:property-placeholder location="classpath:mina.properties" /> -->
+	<bean
+		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.net.SocketAddress" value="org.apache.mina.integration.beans.InetSocketAddressEditor">
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<!-- 通过sessionConfig注入信息 -->
+	<bean id="sessionConfig" factory-bean="ioAcceptor" factory-method="getSessionConfig">
+	     <!-- 设置会话空闲时间,单位是s -->
+	     <property name="bothIdleTime" value="15" />
+	     <!-- 告知底层最小缓冲区 -->
+	     <property name="minReadBufferSize" value="512" />
+	     <property name="maxReadBufferSize" value="10240" />
+	</bean>
+	<bean id="executorFilter" class="org.apache.mina.filter.executor.ExecutorFilter" />
+	<bean id="mdcInjectionFilter" class="org.apache.mina.filter.logging.MdcInjectionFilter">
+		<constructor-arg value="remoteAddress"/>
+	</bean>
+
+	<bean id="codecFilterWeiKe" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+		<constructor-arg>
+			<bean class="com.jfservice.charset.weike.CharsetCodecFactoryII"></bean>
+		</constructor-arg>
+	</bean>
+	<bean id="codecFilterAlp" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+		<constructor-arg>
+			<bean class="com.jfservice.charset.alpha.CharsetCodecFactoryII"></bean>
+		</constructor-arg>
+	</bean>
+	<bean id="codecFilterJlt" class="org.apache.mina.filter.codec.ProtocolCodecFilter">
+		<constructor-arg>
+			<bean class="com.jfservice.charset.Jlt.CharsetCodecFactoryII"></bean>
+		</constructor-arg>
+	</bean>
+	<!-- 默认级别是debug -->
+	<bean id="loggingFilter" class="org.apache.mina.filter.logging.LoggingFilter" >
+	    <property name="messageReceivedLogLevel" ref="info"></property>
+	    <property name="exceptionCaughtLogLevel" ref="info"></property>
+	</bean>
+	<!-- 输出info级别 -->
+	<bean id="info" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+	    <property name="staticField" value="org.apache.mina.filter.logging.LogLevel.INFO"></property>
+	</bean>
+	
+	<bean id="serverHandler" class="com.jfservice.sys.handler.ServerHandler" />
+	<bean id="filterChainBuilder"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		<!-- filters是属性 -->
+		<property name="filters">
+			<map>
+				<entry key="executor" value-ref="executorFilter" />
+				<entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+				<entry key="codecFilter" value-ref="codecFilterWeiKe" />
+				<entry key="loggingFilter" value-ref="loggingFilter" />
+			</map>
+		</property>
+	</bean>
+	<!-- 短连接 -->
+	<bean id="ioAcceptor" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":13451" />
+		<property name="handler" ref="serverHandler" />
+		<property name="reuseAddress" value="true" />
+		<property name="filterChainBuilder" ref="filterChainBuilder" />
+	</bean>
+	
+	<!-- 长连接端口 -->
+	<bean id="immediaHandler" class="com.jfservice.sys.handler.ImmediationSerHandler" />
+	<bean id="immediaHandlerAdult" class="com.jfservice.sys.handler.ImmediationSerHandlerAdult" />
+	<bean id="immediaHandler2" class="com.jfservice.sys.handler.ImmediationSerHandlerAlp" />
+	<!-- <bean id="immediaHandler3" class="com.jfservice.sys.handler.ImmediationSerHandlerJlt" /> -->
+	
+	
+	
+	
+	
+	<!-- 通过sessionConfig注入信息 -->
+	<bean id="sessionConfig1" factory-bean="ioAcceptor1" factory-method="getSessionConfig">
+	     <!-- 设置会话空闲时间,单位是s -->
+	     <property name="bothIdleTime" value="15" />
+	     <!-- 告知底层最小缓冲区 -->
+	     <property name="minReadBufferSize" value="512" />
+	     <property name="maxReadBufferSize" value="10240" />
+	</bean>
+	
+	<bean id="ioAcceptor1" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":13061" />
+		<property name="handler" ref="immediaHandler2" /><!-- 阿尔法 -->
+		<property name="reuseAddress" value="true" />
+		<property name="filterChainBuilder" ref="filterChainBuilder2" />
+	</bean>
+	
+	<!-- 长连接端口(alpha语音) -->
+	<!-- 长连接端口 -->
+	<bean id="filterChainBuilder2"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		<!-- filters是属性 -->
+		<property name="filters">
+			<map>
+				<entry key="executor" value-ref="executorFilter" />
+				<entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+				<entry key="codecFilter" value-ref="codecFilterAlp" />
+				<entry key="loggingFilter" value-ref="loggingFilter" />
+			</map>
+		</property>
+	</bean>
+	<!-- 通过sessionConfig注入信息 -->
+	<bean id="sessionConfig2" factory-bean="ioAcceptor2" factory-method="getSessionConfig">
+	     <!-- 设置会话空闲时间,单位是s -->
+	     <property name="bothIdleTime" value="15" />
+	     <!-- 告知底层最小缓冲区 -->
+	     <property name="minReadBufferSize" value="512" />
+	     <property name="maxReadBufferSize" value="10240" />
+	</bean>
+	
+	<bean id="ioAcceptor2" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":13161" />
+		<property name="handler" ref="immediaHandler" /><!-- 威科 -->
+		<property name="reuseAddress" value="true" />
+		<property name="filterChainBuilder" ref="filterChainBuilder" />
+	</bean>
+	
+	<!-- 通过sessionConfig注入信息 -->
+	<bean id="sessionConfig4" factory-bean="ioAcceptor4" factory-method="getSessionConfig">
+	     <!-- 设置会话空闲时间,单位是s -->
+	     <property name="bothIdleTime" value="15" />
+	     <!-- 告知底层最小缓冲区 -->
+	     <property name="minReadBufferSize" value="512" />
+	     <property name="maxReadBufferSize" value="10240" />
+	</bean>
+	
+	<bean id="ioAcceptor4" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":13171" />
+		<property name="handler" ref="immediaHandlerAdult" /><!-- 阿尔法青少年 -->
+		<property name="reuseAddress" value="true" />
+		<property name="filterChainBuilder" ref="filterChainBuilder" />
+	</bean>
+		
+		<!-- 通过sessionConfig注入信息 -->
+<!-- 	<bean id="sessionConfig3" factory-bean="ioAcceptor3" factory-method="getSessionConfig">
+	     设置会话空闲时间,单位是s
+	     <property name="bothIdleTime" value="15" />
+	     告知底层最小缓冲区
+	     <property name="minReadBufferSize" value="512" />
+	     <property name="maxReadBufferSize" value="10240" />
+	</bean> -->
+	
+	<!-- <bean id="ioAcceptor3" class="org.apache.mina.transport.socket.nio.NioSocketAcceptor"
+		init-method="bind" destroy-method="unbind">
+		<property name="defaultLocalAddress" value=":10001"/>
+		<property name="handler" ref="immediaHandler3" />
+		<property name="reuseAddress" value="true" />
+		<property name="filterChainBuilder" ref="filterChainBuilder3" />
+	</bean> -->
+	
+	<!-- 长连接端口(alpha语音) -->
+	<!-- 长连接端口 -->
+	<!-- <bean id="filterChainBuilder3"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		filters是属性
+		<property name="filters">
+			<map>
+				<entry key="executor" value-ref="executorFilter" />
+				<entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+				<entry key="codecFilter" value-ref="codecFilterJlt" />
+				<entry key="loggingFilter" value-ref="loggingFilter" />
+			</map>
+		</property>
+	</bean> -->
+	<!-- 心跳机制 -->	
+	<!-- <bean id="keepFilter" class="org.apache.mina.filter.keepalive.KeepAliveFilter">
+	    <constructor-arg index="0">
+			<bean class="com.jfservice.sys.keep.KeepAliveMessageFactoryImpl"></bean>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<bean class="com.jfservice.sys.keep.KeepAliveRequestTimeoutHandlerImpl"></bean>
+		</constructor-arg>
+		<property name="forwardEvent" value="false" />
+		<property name="requestInterval" value="50" />
+		<property name="requestTimeout" value="20" />
+	</bean> -->
+	<!-- 心跳连接 -->
+	<!-- <bean id="filterChainBuilder1"
+		class="org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder">
+		filters是属性
+		<property name="filters">
+			<map>
+				<entry key="executor" value-ref="executorFilter" />
+				<entry key="mdcInjectionFilter" value-ref="mdcInjectionFilter" />
+				<entry key="codecFilter" value-ref="codecFilter" />
+				<entry key="loggingFilter" value-ref="loggingFilter" />
+				<entry key="heartbeat" value-ref="keepFilter"></entry>
+			</map>
+		</property>
+	</bean> -->
+</beans>

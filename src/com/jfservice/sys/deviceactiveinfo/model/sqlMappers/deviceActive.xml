@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfservice.sys.deviceactiveinfo.model.DeviceActive">
+	<resultMap type="deviceActive" id="deviceActiveResult">
+	    <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	    <result property="deviceImei" column="device_imei" />
+		<result property="userId" column="user_id" />
+		<result property="belongProject" column="belong_project" />
+		<result property="deviceHead" column="device_head" />
+		<result property="deviceName" column="device_name" />
+		<result property="deviceDisable" column="device_disable" />
+		<result property="name" column="name" />
+		<result property="time" column="time" />
+		<result property="heartRate" column="heart_rate" />
+		<result property="uid" column="uid" />
+		<result property="did" column="did" />
+		<result property="updateTime" column="update_time" />
+		<result property="type" column="type" />
+	</resultMap>
+	<sql id="whereId">
+	   <if test="id != null and id != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereParamId">
+	   <if test="_parameter != null and _parameter != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="updateColumn">
+	   <if test="deviceStatus != null">
+	        device_status = #{deviceStatus},
+	   </if>
+	   <if test="balance != null and balance !=0">
+	          balance = #{balance},
+	   </if>
+	   <if test="name != null and name !=0">
+	          name = #{name},
+	   </if>
+	</sql>
+	<sql id="whereSqlId">
+	   <where>
+	        <include refid="whereId"></include>
+	        <if test="deviceImei != null">
+	           and device_imei = #{deviceImei}
+	        </if>
+	        <if test="belongProject != null">
+	           and belong_project = #{belongProject}
+	        </if>
+	        <if test="deviceDisable != null">
+	           and device_disable = #{deviceDisable}
+	        </if>
+	         <if test="did != null and did!=0 ">
+	           and did = #{did}
+	        </if>
+	         <if test="uid != null and uid!=0">
+	           and uid = #{uid}
+	        </if>
+	    </where>
+	</sql>
+	<select id="countDeviceActive" parameterType="deviceActive" resultMap="deviceActiveResult">
+	    SELECT count(*) FROM device_active_info
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findByIdDeviceActive" parameterType="int" resultMap="deviceActiveResult">
+	    SELECT * FROM device_active_info
+	    <where>
+	      <include refid="whereParamId"></include>
+	    </where>
+	</select>
+	<select id="findDeviceActive" parameterType="deviceActive" resultMap="deviceActiveResult">
+	    SELECT * FROM device_active_info
+	    <include refid="whereSqlId"></include> 
+	</select>
+	
+<select id="findDeviceGroups" parameterType="deviceActive" resultMap="deviceActiveResult">
+	    SELECT * FROM talk_group
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findAllDeviceActive" parameterType="deviceActive" resultMap="deviceActiveResult">
+	    SELECT * FROM device_active_info
+	</select>
+	
+	<insert id="insertHeartRate" parameterType="deviceActive" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		heart_rate_info(imei,heart_rate,time) 
+		values(#{deviceImei},#{heartRate},#{time})
+	</insert>
+	
+		<insert id="insertGroup" parameterType="deviceActive" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		talk_group(device_imei,name,uid,did,type,update_time) 
+		values(#{deviceImei},#{name},#{uid},#{did},#{type},#{updateTime})
+	</insert>
+	<!-- <insert id="insertDeviceActive" parameterType="deviceActive" useGeneratedKeys="true" keyProperty="id">
+	    INSET INTO
+		device_active_info(msg_content,from_id,to_id,send_type,send_time,status,time_length,belong_project) 
+		values(#{msgContent},#{fromId},#{toId},#{sendType},#{sendTime},#{status},#{timeLength},#{belongProject})
+	</insert>
+	<insert id="batchInsertDeviceActive" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert into device_active_info (msg_content,from_id,to_id,send_type,send_time,status,time_length,belong_project)   
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">  
+        (#{item.msgContent},#{item.fromId},#{item.toId},#{item.sendType},#{item.sendTime},#{item.status},#{item.timeLength},#{item.belongProject})  
+    </foreach>  
+</insert>
+	<update id="updateByIdDeviceActive" parameterType="int">
+		UPDATE device_active_info
+		<set>
+		  <include refid="updateColumn"></include>
+		</set>	
+		<where>
+		    <include refid="whereId"></include>
+		</where>
+	</update>
+	
+	<delete id="deleteByIdDeviceActive" parameterType="int">
+	    DELETE FROM device_active_info
+	    <where>
+		    <include refid="whereId"></include>
+		</where>
+	</delete>
+	
+	<delete id="deleteDeviceActive" parameterType="int">
+	    DELETE FROM device_active_info
+	    <include refid="whereSqlId"></include>
+	</delete>
+	
+	<delete id="batchDeleteDeviceActive" parameterType="java.util.List">
+	    DELETE FROM device_active_info
+	    <where>
+	        id in
+	    </where>
+	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">  
+        #{item}  
+    </foreach> 
+	</delete> -->
+	<update id="updateDeviceActive" parameterType="deviceActive">
+	    UPDATE device_active_info
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	
+	<update id="updateGroup" parameterType="deviceActive">
+	    UPDATE talk_group
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	<delete id="deleteByIdDeviceActive" parameterType="int">
+	    DELETE FROM device_active_info
+	    <where>
+		    <include refid="whereId"></include>
+		</where>
+	</delete>
+</mapper>

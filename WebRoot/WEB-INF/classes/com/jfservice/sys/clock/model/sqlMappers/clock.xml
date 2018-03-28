@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jfservice.sys.clock.model.Clock">
+	<resultMap type="clock" id="ClockResult">
+	    <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+		<result property="did" column="did" />
+		<result property="alarmId" column="alarmId"/>
+		<result property="name" column="name"/>
+		<result property="clock" column="clock" />
+		<result property="type" column="type" />
+		<result property="remainType" column="remain_type" />
+		<result property="repeatTimes" column="repeatTimes" />
+		<result property="vibrate" column="vibrate" />
+		<result property="ring" column="ring" />
+		<result property="ringId" column="ringId" />
+		<result property="statu" column="statu" />
+		<result property="time" column="time" />
+		<result property="repeat" column="repeat" />
+		<result property="serieNo" column="serieNo" />
+	</resultMap>
+	<sql id="whereParamId">
+	   <if test="_parameter != null and _parameter != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereId">
+	   <if test="id != null and id != 0">
+	           id = #{id}
+	   </if>
+	</sql>
+	<sql id="whereSerieNo">
+	   <if test="serieNo != null and serieNo != 0">
+	           serieNo = #{serieNo}
+	   </if>
+	</sql>
+	<sql id="updateColumn">
+	   <if test="alarmId != null">
+	         alarmId = #{alarmId},
+	   </if>
+	   <if test="name != null">
+	         name = #{name},
+	   </if>
+	   <if test="clock != null">
+	         clock = #{clock},
+	   </if>
+	   <if test="type != null">
+	         type = #{type},
+	   </if>
+	   <if test="remainType != null">
+	         remain_type = #{remainType},
+	   </if>
+	   <if test="repeatTimes != null">
+	         repeatTimes = #{repeatTimes},
+	   </if>
+	   <if test="vibrate != null">
+	         vibrate = #{vibrate},
+	   </if>
+	   <if test="ring != null">
+	         ring = #{ring},
+	   </if>
+	   <if test="ringId != null">
+	         ringId = #{ringId},
+	   </if>
+	   <if test="statu != null">
+	         statu = #{statu},
+	   </if>
+	</sql>
+	<sql id="whereSqlId">
+	   <where>
+	        <include refid="whereId"></include>
+	        <if test="did != null">
+	           and did = #{did}
+	        </if>
+	    </where>
+	</sql>
+	<select id="countClock" parameterType="clock" resultMap="ClockResult">
+	    SELECT * FROM clock_info
+	    <include refid="whereSqlId"></include> 
+	</select>
+	<select id="findByIdClock" parameterType="int" resultMap="ClockResult">
+	    SELECT * FROM clock_info
+	    <where>
+	       <if test="_parameter != 0 and _parameter != null">
+	          id = #{id}
+	       </if>
+	    </where>
+	</select>
+	<select id="findClock" parameterType="clock" resultMap="ClockResult">
+	   SELECT * FROM clock_info
+	   <include refid="whereSqlId"></include>
+	</select>
+	<select id="findClockDisturb" parameterType="clock" resultMap="ClockResult">
+	   SELECT * FROM disturb_info
+	   <where>
+		    <include refid="whereSerieNo"></include>
+		</where>
+	</select>
+	<select id="findAllClock" parameterType="clock" resultMap="ClockResult">
+	    SELECT * FROM clock_info
+	</select>
+	<insert id="insertClock" parameterType="clock" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO
+		clock_info(did,alarmId,name,clock,type,remain_type,statu,repeatTimes,vibrate,ring,ringId,vol)
+		values(#{did},#{alarmId},#{name},#{clock},#{type},#{remainType},#{statu},#{repeatTimes},#{vibrate},#{ring},#{ringId},#{vol})
+	</insert>
+	<insert id="batchInsertClock" useGeneratedKeys="true" parameterType="java.util.List">  
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>  
+    insert into clock_info(did,alarmId,name,clock,type,remain_type,statu,repeatTimes,vibrate,ring,ringId,vol)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">  
+        (#{item.did},#{item.alarmId},#{item.name},#{item.clock},#{item.type},#{item.remainType},#{item.statu},#{item.repeatTimes},#{item.vibrate},#{item.ring},#{item.ringId},#{item.vol})
+    </foreach>  
+</insert>
+	<update id="updateByIdClock" parameterType="int">
+		UPDATE clock_info
+		<set>
+		  <include refid="updateColumn"></include>
+		</set>	
+		<where>
+		    <include refid="whereParamId"></include>
+		</where>
+	</update>
+	
+	<update id="updateClock" parameterType="clock">
+	    UPDATE clock_info
+	    <set>
+		  <include refid="updateColumn"></include>
+		</set>
+		<include refid="whereSqlId"></include>
+	</update>
+	
+	<delete id="deleteByIdClock" parameterType="int">
+	    DELETE FROM clock_info
+	    <where>
+		    <include refid="whereParamId"></include>
+		</where>
+	</delete>
+	
+	<delete id="deleteClock" parameterType="clock">
+	    DELETE FROM clock_info
+	    <include refid="whereSqlId"></include>	    
+	</delete>
+	
+	<delete id="batchDeleteClock" parameterType="java.util.List">
+	    DELETE FROM clock_info
+	    <where>
+	        id in
+	    </where>
+	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">  
+        #{item}  
+    </foreach> 
+	</delete>
+</mapper>
